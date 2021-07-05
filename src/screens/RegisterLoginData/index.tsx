@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { RFValue } from 'react-native-responsive-fontsize';
@@ -6,6 +6,8 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
+
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
 import { Input } from '../../components/Form/Input';
 import { Button } from '../../components/Form/Button';
@@ -29,6 +31,11 @@ const schema = Yup.object().shape({
 })
 
 export function RegisterLoginData() {
+
+  const navigation = useNavigation()
+
+  const passStorageKey = '@passmanager:logins'
+
   const {
     control,
     handleSubmit,
@@ -36,15 +43,25 @@ export function RegisterLoginData() {
     formState: {
       errors
     }
-  } = useForm();
+  } = useForm({
+    resolver: yupResolver(schema)
+  });
 
   async function handleRegister(formData: FormData) {
+
     const newLoginData = {
       id: String(uuid.v4()),
       ...formData
     }
 
-    // Save data on AsyncStorage
+    const data = await AsyncStorage.getItem(passStorageKey)
+    const currentData = data ? JSON.parse(data) : []
+    const dataFormat = [...currentData, newLoginData]
+    console.log(dataFormat)
+    
+    await AsyncStorage.setItem(passStorageKey, JSON.stringify(dataFormat))
+    navigation.navigate('Home')
+    reset()
   }
 
   return (
@@ -60,9 +77,7 @@ export function RegisterLoginData() {
           <Input
             title="Título"
             name="title"
-            error={
-              // message error here
-            }
+            error={errors.title && errors.title.message}
             control={control}
             placeholder="Escreva o título aqui"
             autoCapitalize="sentences"
@@ -71,9 +86,7 @@ export function RegisterLoginData() {
           <Input
             title="Email"
             name="email"
-            error={
-              // message error here
-            }
+            error={errors.email && errors.email.message}
             control={control}
             placeholder="Escreva o Email aqui"
             autoCorrect={false}
@@ -83,9 +96,7 @@ export function RegisterLoginData() {
           <Input
             title="Senha"
             name="password"
-            error={
-              // message error here
-            }
+            error={errors.password && errors.password.message}
             control={control}
             secureTextEntry
             placeholder="Escreva a senha aqui"
