@@ -32,8 +32,6 @@ const schema = Yup.object().shape({
 
 export function RegisterLoginData() {
 
-  const navigation = useNavigation()
-
   const passwordStorageKey = '@passmanager:logins'
 
   const {

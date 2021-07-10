@@ -42,7 +42,7 @@ export function Home() {
   }, []));
 
   function handleFilterLoginData(search: string) {
-    // Filter results inside data, save with setSearchListData
+
     const regExp = new RegExp(search, 'gi')
     const dataFiltered = data.filter((item) => item.title.match(regExp))
     setSearchListData(dataFiltered)
