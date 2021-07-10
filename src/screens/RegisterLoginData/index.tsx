@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
 
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import {  useNavigation } from '@react-navigation/native';
 
 import { Input } from '../../components/Form/Input';
 import { Button } from '../../components/Form/Button';
@@ -34,7 +34,7 @@ export function RegisterLoginData() {
 
   const navigation = useNavigation()
 
-  const passStorageKey = '@passmanager:logins'
+  const passwordStorageKey = '@passmanager:logins'
 
   const {
     control,
@@ -54,13 +54,13 @@ export function RegisterLoginData() {
       ...formData
     }
 
-    const data = await AsyncStorage.getItem(passStorageKey)
+    const data = await AsyncStorage.getItem(passwordStorageKey)
     const currentData = data ? JSON.parse(data) : []
     const dataFormat = [...currentData, newLoginData]
     console.log(dataFormat)
     
-    await AsyncStorage.setItem(passStorageKey, JSON.stringify(dataFormat))
-    navigation.navigate('Home')
+    await AsyncStorage.setItem(passwordStorageKey, JSON.stringify(dataFormat))
+    Alert.alert('', `Suas Credenciais de ${newLoginData.title} foram salva com sucesso. `)
     reset()
   }
 
