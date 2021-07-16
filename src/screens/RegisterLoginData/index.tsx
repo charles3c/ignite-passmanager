@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
-import { useForm } from 'react-hook-form';
 import { RFValue } from 'react-native-responsive-fontsize';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
 
-import {  useNavigation } from '@react-navigation/native';
+import { useForm } from 'react-hook-form';
+import { useStorageData } from '../../hooks/storage';
 
 import { Input } from '../../components/Form/Input';
 import { Button } from '../../components/Form/Button';
@@ -32,6 +32,8 @@ const schema = Yup.object().shape({
 
 export function RegisterLoginData() {
 
+  const { setItem } = useStorageData()
+
   const passwordStorageKey = '@passmanager:logins'
 
   const {
@@ -52,12 +54,8 @@ export function RegisterLoginData() {
       ...formData
     }
 
-    const data = await AsyncStorage.getItem(passwordStorageKey)
-    const currentData = data ? JSON.parse(data) : []
-    const dataFormat = [...currentData, newLoginData]
-    console.log(dataFormat)
+    await setItem(newLoginData)
     
-    await AsyncStorage.setItem(passwordStorageKey, JSON.stringify(dataFormat))
     Alert.alert('', `Suas Credenciais de ${newLoginData.title} foram salva com sucesso. `)
     reset()
   }

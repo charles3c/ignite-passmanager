@@ -5,6 +5,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { SearchBar } from '../../components/SearchBar';
 import { LoginDataItem } from '../../components/LoginDataItem';
 
+import { useStorageData } from '../../hooks/storage';
+
 import {
   Container,
   LoginList,
@@ -21,17 +23,16 @@ interface LoginDataProps {
 
 type LoginListDataProps = LoginDataProps[];
 
-export function Home() {
-   const [searchListData, setSearchListData] = useState<LoginListDataProps>([]);
-   const [data, setData] = useState<LoginListDataProps>([]);
 
+export function Home() {
+  const [searchListData, setSearchListData] = useState<LoginListDataProps>([]);
+  const [data, setData] = useState<LoginListDataProps>([]);
+  
+  const { getItem } = useStorageData()
+  
   async function loadData() {
-    // Get asyncStorage data, use setSearchListData and setData
-    const passwordStorageKey = '@passmanager:logins';
-    const data = await AsyncStorage.getItem(passwordStorageKey);
-    const currentPasswordsData = data ? JSON.parse(data) : [];
-    setSearchListData(currentPasswordsData)
-    setData(currentPasswordsData)
+    setSearchListData(await getItem())
+    setData(await getItem()  )
   }
   useEffect(() => {
     loadData();
