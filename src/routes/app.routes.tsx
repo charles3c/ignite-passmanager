@@ -2,6 +2,7 @@ import React from 'react';
 import FeatherIcon from '@expo/vector-icons/Feather';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { useTheme } from 'styled-components';
 
 import { Home } from '../screens/Home';
 import { RegisterLoginData } from '../screens/RegisterLoginData';
@@ -13,14 +14,15 @@ const {
 } = createBottomTabNavigator();
 
 export function AppRoutes() {
+  const theme = useTheme()
   return (
     <Navigator
       tabBarOptions={{
-        activeTintColor: '#4E3975',
-        inactiveTintColor: '#9883BF',
+        activeTintColor: theme.colors.text,
+        inactiveTintColor: theme.colors.text_light,
         labelPosition: 'beside-icon',
         labelStyle: {
-          fontFamily: 'Poppins_500Medium',
+          fontFamily: theme.fonts.medium,
           fontSize: RFValue(14),
           marginLeft: RFValue(14)
         },

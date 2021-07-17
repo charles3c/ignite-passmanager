@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { SearchBar } from '../../components/SearchBar';
